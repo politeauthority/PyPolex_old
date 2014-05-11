@@ -6,19 +6,17 @@
 
 import sys
 import os
-import hashlib
 import includes.DriverLog as DriverLog
 import includes.ImageDownload as ImageDownload
+import includes.ImageFile as ImageFile
 import includes.ImageManipulation as ImageManipulation
 from config import config
 
-Log = DriverLog.DriverLog( config['log_dir'] + 'new_log', config['verbosity'] )
+ID = ImageDownload.ImageDownload()
+IF = ImageFile.ImageFile()
+IM = ImageManipulation.ImageManipulation()
 
-def imgSave( raw_request, im ):
-  the_hash = hashlib.md5( raw_request ).hexdigest()
-  prepared_image = config['cache_dir'] + the_hash + ".jpg"
-  im.save( prepared_image )
-  Log.write( '    Saved Image: ' + prepared_image )
+Log = DriverLog.DriverLog( config['log_dir'] + 'new_log', config['verbosity'] )
 
 def check_for_cache( url_request ):
   Log.write( '  Checking Cache ' )
@@ -50,7 +48,7 @@ if __name__ == "__main__":
 
   im1 = ImageManipulation.ImageManipulation().route( local_image_path, args )
 
-  imgSave( url, im1 )
+  IF.save( url, im1 )
   Log.write( 'Finished' )
 
 # End File: PyPolex.py

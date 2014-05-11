@@ -22,10 +22,10 @@ class ImageManipulation( object ):
 
   def route( self, local_path, args ):
     Log.write( '  Image Resizing' )
-    Log.write( '    Args: %s' % args )      
+    Log.write( '    Args: %s' % str( args ) )      
     self.local_path = local_path
     self.args       = args
-    for key, value in args.iteritems():
+    for key, value in self.args.iteritems():
       if key == 'crop':
         self.img = self.crop()
       elif key == 'maxWidth' or key == 'maxHeight':
