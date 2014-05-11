@@ -22,7 +22,11 @@ class ImageDownload( object ):
   def __init__( self ):
     self.remote_url = ''
     self.img_path   = ''
-
+  """
+    Go
+    Kicks off the entire download process
+    @params: url str() remote image url to download
+  """
   def go( self, remote_url ):
     self.remote_url = remote_url
     self.__check_hosts()
@@ -42,11 +46,13 @@ class ImageDownload( object ):
     that we wont accept connections from
   """
   def __check_hosts( self ):
-    if self.remote_url in config['blacklist']:
-      Log.write( '    Remote Host: %s is BANNED' % self.remote_url )
-      return False
-    else:
-      return True
+    if config['use_whitelist']:
+      print 'Using White List'
+    if config['use_blacklist']:
+      if self.remote_url in config['blacklist']:
+        Log.write( '    Remote Host: %s is BANNED' % self.remote_url )
+        return False
+    return True
 
   """
     Check Valid File Type

@@ -19,6 +19,12 @@ class ImageFile( object ):
 		self.cache_dir  = config['cache_dir']
 		self.phile_path = ''
 
+	"""
+		Save
+		@params:
+			url : str()
+			img : object( image )
+	"""
 	def save( self, url, img ):
 		the_hash = hashlib.md5( url ).hexdigest()
 		self.phile_path = config['cache_dir'] + the_hash + '.jpg'
@@ -27,6 +33,9 @@ class ImageFile( object ):
 		Log.write( '    Saved Image: ' + self.phile_path )
 		return self.phile_path
 
+	"""
+		loadByPath
+	"""
 	def loadByPath( self, path ):
 		f = open( path, 'rb' )
 		contents = f.read()
@@ -34,6 +43,9 @@ class ImageFile( object ):
 		# print contents
 		return contents
 
+	"""
+		loadByUrl
+	"""
 	def loadByUrl( self, url ):
 		the_hash = hashlib.md5( url ).hexdigest()
 		f.open( self.cache_dir + the_hash + '.jpg' )

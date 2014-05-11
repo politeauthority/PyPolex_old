@@ -18,22 +18,13 @@ class Root( object ):
 
 	def index( self, *args, **kwargs ):
 		image_path = ID.go( kwargs['url'] )
-		img_args = { 'crop': { 'width' : 200, 'height' : 200} }
-		im1 = IM.route( image_path, img_args )
-		path = IF.save( kwargs['url'], im1 )
-		path = ''
-		self.show_img( path )
-		# return str(args ) + ' ' + str( kwargs ) + ' ' + path
-	index.exposed = True
-
-	def show_img( self, path ):
+		img_args = { 'crop': { 'width' : 600, 'height' : 600} }
+		im1      = IM.route( image_path, img_args )
+		path     = IF.save( kwargs['url'], im1 )
+		content  = IF.loadByPath( path )
 		cherrypy.response.headers['Content-Type'] = "image/jpg"
-		# f = open( path, 'rb' )
-		f = open( '/home/alix/Dropbox/Python-Fun/PyPollex/cache/a627336a5ed9c0f4295b9a77f53abc60.jpg', 'rb' )
-		contents = f.read()
-		f.close()
-		return contents
-		# return IF.loadByPath( path )
+		return content
+	index.exposed = True
 
 if __name__ == '__main__':  
   cherrypy.quickstart( Root(),  config = config['webserver'] )
