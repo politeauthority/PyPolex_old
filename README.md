@@ -1,0 +1,4 @@
+PyPollex
+========
+
+Python Thumbnail Generator
