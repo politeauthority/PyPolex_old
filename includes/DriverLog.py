@@ -36,7 +36,7 @@ class DriverLog( object ):
 
 	def __create_blank( self ):
 		if not os.path.isfile( self.phile_name ):
-			f = open( self.phile_name,'r+')
+			f = open( self.phile_name,'w')
 			f.write('\n')
 			f.close()
 
