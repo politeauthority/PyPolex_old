@@ -1,14 +1,22 @@
-#!/usr/bin/python                                                                                                
-# Log Driver
-# This driver helps write quick log files
+#!/usr/bin/python
+"""
+	Log Driver
+	This is just a basic driver for write quick log files
+	example commands for log reading:
+		less logs/run_log.txt | grep 'downloaded'
+		tail -f logs/run_log.txt | grep 'downloaded'
+	@author: Alix Fullerton
+"""
 
+import os
 import datetime
-import time
+
 class DriverLog( object ):
 
 	def __init__( self, phile, verbosity = False ):
 		self.phile_name = phile
 		self.verbosity  =  verbosity
+		self.__create_blank()
 
 	def write( self, line ):
 		time = ''
@@ -25,4 +33,11 @@ class DriverLog( object ):
 			content = f.read()
 			f.seek(0,0)
 			f.write(line.rstrip('\r\n') + '\n' + content)
+
+	def __create_blank( self ):
+		if not os.path.isfile( self.phile_name ):
+			f = open( self.phile_name,'r+')
+			f.write('\n')
+			f.close()
+
 # End File: DriverLog.py
