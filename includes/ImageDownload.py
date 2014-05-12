@@ -22,22 +22,26 @@ class ImageDownload( object ):
   def __init__( self ):
     self.remote_url = ''
     self.img_path   = ''
+
   """
     Go
     Kicks off the entire download process
     @params: url str() remote image url to download
   """
-  def go( self, remote_url ):
+  def go( self, remote_url, args ):
+    Log.write( '  Downloading: %s' % remote_url )
     self.remote_url = remote_url
     self.__check_hosts()
     remote_image = urllib.urlopen( self.remote_url ).read()
     the_hash     = hashlib.md5( remote_url ).hexdigest()
-    self.img_path     = config['upload_dir'] + the_hash
+    self.img_path = config['upload_dir'] + the_hash
+    print self.img_path
     f = open( self.img_path ,'wb')
     f.write( remote_image )
     f.close()
     Log.write( '    Saved File : %s' % self.img_path )  # Check Valid File Type
-    self.__scan_file( )
+    if not self.__scan_file():
+      return False
     return self.img_path
 
   """
@@ -58,11 +62,10 @@ class ImageDownload( object ):
     Check Valid File Type
   """
   def __scan_file( self ):
-    valid_image_types = ['jpeg']
+    valid_image_types = [ 'jpeg', 'jpg' ]
     if imghdr.what( self.img_path ) in valid_image_types:
       Log.write( '    Passed Extension Check : %s' % imghdr.what( self.img_path ) )
       return True
     else:
       Log.write( ' ERROR Failed Extension Check: %s ' % imghdr.what( self.img_path ) )
-      sys.exit()
     return False

@@ -24,13 +24,22 @@ class ImageManipulation( object ):
     Log.write( '  Image Resizing' )
     Log.write( '    Args: %s' % str( args ) )      
     self.local_path = local_path
+    self.img        = Image.open( self.local_path )
     self.args       = args
-    for key, value in self.args.iteritems():
-      if key == 'crop':
-        self.img = self.crop()
-      elif key == 'maxWidth' or key == 'maxHeight':
-        self.img = self.maxSize( dimension = key )
+    if self.args:
+      for key, value in self.args.iteritems():
+        if key == 'crop':
+          self.img = self.crop()
+        elif key == 'maxWidth' or key == 'maxHeight':
+          self.img = self.maxSize( dimension = key )
     return self.img
+
+  def maxSize( self, dimension ):
+    print 'force either width or height to be a max size'
+    if dimension == 'width':
+      print 'the max width is ', self.args['maxWidth']
+    elif dimension == 'height':
+      print 'the max height is', self.args['maxHeight']
 
   def resize( self, extra_args = None ):
     print 'max width of height here'
@@ -38,7 +47,7 @@ class ImageManipulation( object ):
   def crop( self, extra_args = None ):
     d_width  = self.args['crop']['width']
     d_height = self.args['crop']['height']
-    im = Image.open( self.local_path )
+    im = self.img
     # Prepare to resize the image
     o_width  = im.size[0] 
     o_height = im.size[1]
@@ -86,12 +95,5 @@ class ImageManipulation( object ):
 
   def mirror( self ):
     print 'mirror'
-
-  def maxSize( self, dimension ):
-    print 'force either width or height to be a max size'
-    if dimension == 'width':
-      print 'the max width is ', self.args['maxWidth']
-    elif dimension == 'height':
-      print 'the max height is', self.args['maxHeight']
 
 # End File: includes/ImageManipulation.py

@@ -17,14 +17,36 @@ IM = ImageManipulation.ImageManipulation()
 class Root( object ):
 
 	def index( self, *args, **kwargs ):
-		image_path = ID.go( kwargs['url'] )
-		img_args = { 'crop': { 'width' : 600, 'height' : 600} }
-		im1      = IM.route( image_path, img_args )
-		path     = IF.save( kwargs['url'], im1 )
-		content  = IF.loadByPath( path )
+		request_url = kwargs['url']
+		img_args    = self.__arg_parser( kwargs )
+		
+		cache = IF.loadByCache( request_url, img_args )
+		if cache:
+			content = cache
+			print 'loaded by cache'
+			print 'loaded by cache'
+			print 'loaded by cache'
+			print 'loaded by cache'
+		else:
+			image_path = ID.go( kwargs['url'], img_args )
+			if image_path:
+				im1      = IM.route( image_path, img_args )
+				path     = IF.save( kwargs['url'], im1, img_args )
+				content  = IF.loadByPath( path )
+			else:
+				return 'Error'
 		cherrypy.response.headers['Content-Type'] = "image/jpg"
 		return content
 	index.exposed = True
+
+	def __arg_parser( self, args ):
+		outbound = {}
+		if 'crop' in args.iterkeys():
+			dimension = args['crop'].split(',')
+			outbound['crop'] = {}
+			outbound['crop']['width']  = int( dimension[0] )
+			outbound['crop']['height'] = int( dimension[1] )
+		return outbound
 
 if __name__ == '__main__':  
   cherrypy.quickstart( Root(),  config = config['webserver'] )

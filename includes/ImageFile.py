@@ -25,9 +25,11 @@ class ImageFile( object ):
 			url : str()
 			img : object( image )
 	"""
-	def save( self, url, img ):
-		the_hash = hashlib.md5( url ).hexdigest()
+	def save( self, url, img, args ):
+		the_hash = hashlib.md5( url + str( args ) ).hexdigest()
 		self.phile_path = config['cache_dir'] + the_hash + '.jpg'
+		print self.phile_path
+		print self.phile_path
 		img.save( self.phile_path )
 		# img.save( self.phile_path )
 		Log.write( '    Saved Image: ' + self.phile_path )
@@ -51,5 +53,20 @@ class ImageFile( object ):
 		f.open( self.cache_dir + the_hash + '.jpg' )
 		f.close
 		return f
+
+	"""
+		loadByCahce
+		@params:
+			url  : str( )
+			args : dict{ }
+	"""
+	def loadByCache( self, url, args ):
+		if config['use_cache']:
+			the_hash = hashlib.md5( url + str( args ) ).hexdigest()
+			self.phile_path = config['cache_dir'] + the_hash + '.jpg'
+			if os.path.isfile( self.phile_path ):
+				return self.loadByPath( self.phile_path )
+		return False
+
 
 # End File: includes/ImageFile.py
