@@ -20,13 +20,11 @@ class Root( object ):
 		request_url = kwargs['url']
 		img_args    = self.__arg_parser( kwargs )
 		
+		self.__check_cache_removal( img_args )
+		self.__check_extra_args( img_args )
 		cache = IF.loadByCache( request_url, img_args )
 		if cache:
 			content = cache
-			print 'loaded by cache'
-			print 'loaded by cache'
-			print 'loaded by cache'
-			print 'loaded by cache'
 		else:
 			image_path = ID.go( kwargs['url'], img_args )
 			if image_path:
@@ -39,6 +37,10 @@ class Root( object ):
 		return content
 	index.exposed = True
 
+	"""
+		__arg_parser
+		@description: Reads through arguments and builds out the proper request 
+	"""
 	def __arg_parser( self, args ):
 		outbound = {}
 		if 'crop' in args.iterkeys():
@@ -46,7 +48,32 @@ class Root( object ):
 			outbound['crop'] = {}
 			outbound['crop']['width']  = int( dimension[0] )
 			outbound['crop']['height'] = int( dimension[1] )
+		if 'watermark' in args.iterkeys():
+			outbound['watermark'] = args['watermark']
+		if 'flip' in args:
+			outbound['flip'] = args['flip']
 		return outbound
+
+	"""
+		__check_cache_removal
+		@description: checks to see if 
+	"""
+	def __check_cache_removal( self, img_args ):
+		if 'remove_cache' in img_args and img_args['remove_cache'] == True:
+			cached_args = img_args
+			cached_args.pop( 'remove_cache', None )
+			IF.remove_cache( cached_args )
+
+	def __check_extra_args( self, args ):
+		if 'watermark' in args:
+			image_path = ID.go( args['watermark'], { 'watermark' : True } )
+			print ' '
+			print ' '
+			print ' '
+			print 'watermark URL'
+			print image_path
+			print ''
+			print ' '
 
 if __name__ == '__main__':  
   cherrypy.quickstart( Root(),  config = config['webserver'] )

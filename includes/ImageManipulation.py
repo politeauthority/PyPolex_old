@@ -7,6 +7,8 @@
 import sys
 import os
 import Image
+import ImageOps
+
 sys.path.append( os.path.join(os.path.dirname(__file__), '../', '') )
 from config import config
 import includes.DriverLog as DriverLog
@@ -18,9 +20,10 @@ class ImageManipulation( object ):
   def __init__( self ):
     self.local_path = ''
     self.img        = ''
-    self.args       = ''
+    self.args       = False
 
   def route( self, local_path, args ):
+    Log.write(' ')
     Log.write( '  Image Resizing' )
     Log.write( '    Args: %s' % str( args ) )      
     self.local_path = local_path
@@ -32,6 +35,10 @@ class ImageManipulation( object ):
           self.img = self.crop()
         elif key == 'maxWidth' or key == 'maxHeight':
           self.img = self.maxSize( dimension = key )
+        if key == 'wattermark':
+          self.img = self.wattermark()
+        if key == 'flip':
+          self.img = self.flip( args )
     return self.img
 
   def maxSize( self, dimension ):
@@ -51,7 +58,7 @@ class ImageManipulation( object ):
     # Prepare to resize the image
     o_width  = im.size[0] 
     o_height = im.size[1]
-    Log.write( '    Original Width: %spx, Original Height: %spx' % ( o_width, o_height ) )    
+    Log.write( '    Original Width: %spx, Original Height: %spx' % ( o_width, o_height ) )
     if d_width < d_height:
       d_smaller = d_width
     else:
@@ -71,7 +78,7 @@ class ImageManipulation( object ):
 
     n_width  = o_width / divisor
     n_height = o_height / divisor
-    Log.write( '    Scaled Width: %spx, Scaled Height: %spx' % ( n_width, n_height ) ) 
+    Log.write( '    Scaled Width: %spx, Scaled Height: %spx' % ( n_width, n_height ) )
     # Prepare the Crop
     if n_width > n_height:
       crop_left  = ( n_width / 2 ) - ( d_width / 2 )
@@ -90,8 +97,23 @@ class ImageManipulation( object ):
     im = im.crop( crop_cords )
     return im
 
+  def flip( self, extra_args ):
+    if 'flip' in extra_args:
+      if extra_args['flip'] == 'vertical' or extra_args['flip'] == 'v':
+        return self.img.transpose( Image.FLIP_TOP_BOTTOM )
+      else:
+        return self.img.transpose( Image.FLIP_LEFT_RIGHT )
+
   def wattermark( self ):
+    print ''
+    print ''
+    print ''
     print 'wattermarkign'
+    print self.args['wattermark']
+    print ''
+    print ''
+    print ''
+    return self.img
 
   def mirror( self ):
     print 'mirror'

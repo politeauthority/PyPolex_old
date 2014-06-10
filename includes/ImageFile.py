@@ -68,5 +68,13 @@ class ImageFile( object ):
 				return self.loadByPath( self.phile_path )
 		return False
 
+	"""
+		removeCache
+		@description: destroys caches on request
+		@todo: rate limit this so bots dont end up creating issues
+	"""
+	def removeCache( url, args ):
+		print 'here we should be removing caches!'
+
 
 # End File: includes/ImageFile.py

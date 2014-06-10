@@ -15,14 +15,14 @@ class DriverLog( object ):
 
 	def __init__( self, phile, verbosity = False ):
 		self.phile_name = phile
-		self.verbosity  =  verbosity
+		self.verbosity  = verbosity
 		self.__create_blank()
 
 	def write( self, line ):
 		time = ''
 		if line != '':
 			the_time = datetime.datetime.now()
-			line = "[%s] %s" % ( str(the_time), str( line ) )
+			line = "[%s] %s" % ( str( the_time ), str( line ) )
 		if self.verbosity:
 			print line
 		self.line_prepender( self.phile_name, line )
@@ -40,4 +40,4 @@ class DriverLog( object ):
 			f.write('\n')
 			f.close()
 
-# End File: DriverLog.py
+# End File: includes/DriverLog.py

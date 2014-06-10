@@ -6,7 +6,7 @@ config = {
   'verbosity'     : True,
   'use_cache'     : True,
   'upload_dir'    : '/home/user/PyPollex/images/uploads/',
-  'cache_dir'     : 'home/user/PyPollex/images/cache/',
+  'cache_dir'     : '/home/user/PyPollex/images/cache/',
   'log_dir'       : '/home/user/PyPollex/PyThumbs/logs/',
   'use_whitelist' : False,
   'whitelist'     : [],

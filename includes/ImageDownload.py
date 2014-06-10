@@ -21,21 +21,24 @@ class ImageDownload( object ):
 
   def __init__( self ):
     self.remote_url = ''
-    self.img_path   = ''
+    self.img_path   = False
 
   """
     Go
     Kicks off the entire download process
-    @params: url str() remote image url to download
+    @params: remote_url str() remote image url to download
   """
-  def go( self, remote_url, args ):
+  def go( self, remote_url, args = None ):
     Log.write( '  Downloading: %s' % remote_url )
     self.remote_url = remote_url
-    self.__check_hosts()
-    remote_image = urllib.urlopen( self.remote_url ).read()
-    the_hash     = hashlib.md5( remote_url ).hexdigest()
-    self.img_path = config['upload_dir'] + the_hash
-    print self.img_path
+    if not self.__check_hosts():
+      return False
+    remote_image    = urllib.urlopen( self.remote_url ).read()
+    the_hash        = hashlib.md5( remote_url ).hexdigest()
+    if 'watermark' in args:
+      self.img_path   = config['img_dir'] + 'watermark/' + the_hash
+    else:
+      self.img_path   = config['upload_dir'] + the_hash
     f = open( self.img_path ,'wb')
     f.write( remote_image )
     f.close()
@@ -45,7 +48,7 @@ class ImageDownload( object ):
     return self.img_path
 
   """
-    Check Hosts
+    __check_hosts
     Here we can run a white or black list filter on remote hosts
     that we wont accept connections from
   """
@@ -59,13 +62,26 @@ class ImageDownload( object ):
     return True
 
   """
-    Check Valid File Type
+    __scan_file
+    @description: Check if we have a valid image File
+    @todo: Is not curently working
   """
   def __scan_file( self ):
     valid_image_types = [ 'jpeg', 'jpg' ]
+    print ' '
+    print ' '
+    print ' '
+    print imghdr.what( self.img_path )
+    print ' '
+    print ' '
+    print ' '
+    return True
     if imghdr.what( self.img_path ) in valid_image_types:
       Log.write( '    Passed Extension Check : %s' % imghdr.what( self.img_path ) )
       return True
     else:
       Log.write( ' ERROR Failed Extension Check: %s ' % imghdr.what( self.img_path ) )
     return False
+
+# End File: includes/ImageDownload.py
+
