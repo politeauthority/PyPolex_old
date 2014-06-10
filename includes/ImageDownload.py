@@ -14,13 +14,15 @@ import imghdr
 sys.path.append( os.path.join(os.path.dirname(__file__), '../', '') )
 from config import config
 import includes.DriverLog as DriverLog
+import includes.DriverMysql as DriverMysql
 
-Log = DriverLog.DriverLog( config['log_dir'] + 'new_log', config['verbosity'] )
+Log   = DriverLog.DriverLog( config['log_dir'] + 'new_log', config['verbosity'] )
+Mysql = DriverMysql.DriverMysql( config['database'] )
 
 class ImageDownload( object ):
 
   def __init__( self ):
-    self.remote_url = ''
+    self.remote_url = False
     self.img_path   = False
 
   """
@@ -53,13 +55,22 @@ class ImageDownload( object ):
     that we wont accept connections from
   """
   def __check_hosts( self ):
-    if config['use_whitelist']:
-      print 'Using White List'
-    if config['use_blacklist']:
-      if self.remote_url in config['blacklist']:
-        Log.write( '    Remote Host: %s is BANNED' % self.remote_url )
+    white_list_pass = False
+    if len( config['whitelist'] ) > 0:
+      for white in config['whitelist']:
+        if white in self.remote_url:
+          white_list_pass = True
+          break
+      if white_list_pass:
+        print 'White list was passed!'
+        return True
+      else:
         return False
-    return True
+    # if len( config['blacklist'] ) > 0: 
+    #   if self.remote_url in config['blacklist']:
+    #     Log.write( '    Remote Host: %s is BANNED' % self.remote_url )
+    #     return False
+    return
 
   """
     __scan_file
@@ -68,13 +79,13 @@ class ImageDownload( object ):
   """
   def __scan_file( self ):
     valid_image_types = [ 'jpeg', 'jpg' ]
-    print ' '
-    print ' '
-    print ' '
-    print imghdr.what( self.img_path )
-    print ' '
-    print ' '
-    print ' '
+    # print ' '
+    # print ' '
+    # print ' '
+    # print imghdr.what( self.img_path )
+    # print ' '
+    # print ' '
+    # print ' '
     return True
     if imghdr.what( self.img_path ) in valid_image_types:
       Log.write( '    Passed Extension Check : %s' % imghdr.what( self.img_path ) )

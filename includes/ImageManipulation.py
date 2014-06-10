@@ -8,6 +8,7 @@ import sys
 import os
 import Image
 import ImageOps
+import struct
 
 sys.path.append( os.path.join(os.path.dirname(__file__), '../', '') )
 from config import config
@@ -21,8 +22,9 @@ class ImageManipulation( object ):
     self.local_path = ''
     self.img        = ''
     self.args       = False
+    self.bg         = False
 
-  def route( self, local_path, args ):
+  def get( self, local_path, args ):
     Log.write(' ')
     Log.write( '  Image Resizing' )
     Log.write( '    Args: %s' % str( args ) )      
@@ -39,6 +41,8 @@ class ImageManipulation( object ):
           self.img = self.wattermark()
         if key == 'flip':
           self.img = self.flip( args )
+        if key == 'bg':
+          self.bg = struct.unpack( 'BBB', args['bg'].decode('hex') )
     return self.img
 
   def maxSize( self, dimension ):
@@ -95,6 +99,10 @@ class ImageManipulation( object ):
     Log.write( '    Crop Cords: Left %spx, Upper: %spx, Right: %s, Lower: %s' % ( crop_left, crop_upper, crop_right, crop_lower ) )    
     im = im.resize((n_width, n_height), Image.ANTIALIAS) # best down-sizing filter
     im = im.crop( crop_cords )
+    if self.bg:
+      new_im = Image.new('RGBA', ( d_width, d_height  ), ( self.bg[0], self.bg[1], self.bg[2], 0) )
+      new_im.paste( im )
+      im = new_im
     return im
 
   def flip( self, extra_args ):
@@ -103,6 +111,9 @@ class ImageManipulation( object ):
         return self.img.transpose( Image.FLIP_TOP_BOTTOM )
       else:
         return self.img.transpose( Image.FLIP_LEFT_RIGHT )
+
+  def matte( self, extra_args = None ):
+    print 'were matting now and shit'
 
   def wattermark( self ):
     print ''
