@@ -22,8 +22,11 @@ Mysql = DriverMysql.DriverMysql( config['database'] )
 class ImageDownload( object ):
 
   def __init__( self ):
-    self.remote_url = False
-    self.img_path   = False
+    self.upload_dir    = config['img_dir'] + 'uploads/'
+    self.watermark_dir = config['img_dir'] + 'watermark/'
+    self.cache_dir     = config['img_dir'] + 'cache/'
+    self.remote_url    = False
+    self.img_path      = False
 
   """
     Go
@@ -38,9 +41,9 @@ class ImageDownload( object ):
     remote_image    = urllib.urlopen( self.remote_url ).read()
     the_hash        = hashlib.md5( remote_url ).hexdigest()
     if 'watermark' in args:
-      self.img_path   = config['img_dir'] + 'watermark/' + the_hash
+      self.img_path   = self.watermark_dir + the_hash
     else:
-      self.img_path   = config['upload_dir'] + the_hash
+      self.img_path   = self.upload_dir + the_hash
     f = open( self.img_path ,'wb')
     f.write( remote_image )
     f.close()
@@ -65,6 +68,7 @@ class ImageDownload( object ):
         print 'White list was passed!'
         return True
       else:
+        Log.write('  Error: Image failed host check: %s' % self.remote_url )
         return False
     # if len( config['blacklist'] ) > 0: 
     #   if self.remote_url in config['blacklist']:

@@ -9,9 +9,11 @@ import os
 import hashlib
 sys.path.append( os.path.join(os.path.dirname(__file__), '../', '') )
 from config import config
+import includes.DriverMysql as DriverMysql
 import includes.DriverLog as DriverLog
 
-Log = DriverLog.DriverLog( config['log_dir'] + 'new_log', config['verbosity'] )
+Log   = DriverLog.DriverLog( config['log_dir'] + 'new_log', config['verbosity'] )
+Mysql = DriverMysql.DriverMysql( config['database'] )
 
 class ImageFile( object ):
 
@@ -28,8 +30,16 @@ class ImageFile( object ):
 	"""
 	def save( self, url, img, args ):
 		the_hash = hashlib.md5( url + str( args ) ).hexdigest()
-		self.phile_path = config['cache_dir'] + the_hash + '.jpg'
+		self.phile_path = self.cache_dir + the_hash + '.jpg'
 		img.save( self.phile_path )
+		params = { 
+			'database' : config['database'], 
+			'path'     : self.phile_path,
+			'url'      : url, 
+		}
+		qry = """INSERT INTO `%(database)s`.`images` ( `path`, `url` )  
+			VALUES (  "%(path)s", "%(url)s" );""" % params
+		print qry
 		Log.write( '    Saved Image: ' + self.phile_path )
 		return self.phile_path
 

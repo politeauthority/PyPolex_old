@@ -19,7 +19,6 @@ class Root( object ):
 
 	"""
 		index
-
 	"""
 	def index( self, *args, **kwargs ):
 		request_url = kwargs['url']
@@ -42,6 +41,14 @@ class Root( object ):
 		cherrypy.response.headers['Content-Type'] = "image/jpg"
 		return content
 	index.exposed = True
+
+	"""
+		documentation
+		URL for resolving documentation
+	"""
+	def documentation( self ):
+		return "Here's where I'll be putting documentation for this bad boy!"
+	documentation.exposed
 
 	"""
 		__arg_parser
@@ -101,6 +108,9 @@ class Root( object ):
 			print image_path
 			print ''
 			print ' '
+
+	def __handle_error( self, args ):
+		return 'handle the error message here'
 
 if __name__ == '__main__':  
   cherrypy.quickstart( Root(),  config = config['webserver'] )
