@@ -48,7 +48,7 @@ class Root( object ):
 	"""
 	def documentation( self ):
 		return "Here's where I'll be putting documentation for this bad boy!"
-	documentation.exposed
+	documentation.exposed = True
 
 	"""
 		__arg_parser
