@@ -5,15 +5,16 @@
 """
 
 import cherrypy
+from config import config
 import includes.ImageDownload as ImageDownload
 import includes.ImageFile as ImageFile
 import includes.ImageManipulation as ImageManipulation
-
-from config import config
+import includes.DriverRenderer as DriverRenderer
 
 ID = ImageDownload.ImageDownload()
 IF = ImageFile.ImageFile()
 IM = ImageManipulation.ImageManipulation()
+Render = DriverRenderer.DriverRenderer()
 
 class Root( object ):
 
@@ -21,6 +22,8 @@ class Root( object ):
 		index
 	"""
 	def index( self, *args, **kwargs ):
+		if 'url' not in kwargs:
+			return self.__handle_error( { 'msg': '', 'view': 'no_args' } )
 		request_url = kwargs['url']
 		img_args    = self.__arg_parser( kwargs )
 		print kwargs
@@ -37,7 +40,7 @@ class Root( object ):
 				path     = IF.save( kwargs['url'], im1, img_args )
 				content  = IF.loadByPath( path )
 			else:
-				return 'Error'
+				return self.__handle_error( { 'msg' : 'Error in Downloading' } )
 		cherrypy.response.headers['Content-Type'] = "image/jpg"
 		return content
 	index.exposed = True
@@ -79,7 +82,7 @@ class Root( object ):
 
 	"""
 		__check_cache_removal
-		@description: checks to see if a query should be removed
+		@description: checks to see if a cache should be removed
 	"""
 	def __check_cache_removal( self, request_url, img_args ):
 		cached_args = img_args
@@ -109,8 +112,15 @@ class Root( object ):
 			print ''
 			print ' '
 
-	def __handle_error( self, args ):
-		return 'handle the error message here'
+	def __handle_error( self, error ):
+		if 'data' in error:
+			data = {}
+		else:
+				data = error['data']
+		if 'view' in error:
+			return Render.make( str( 'error/' + error['view'] ), data )
+		else:
+			return 'handle the error message here'
 
 if __name__ == '__main__':  
   cherrypy.quickstart( Root(),  config = config['webserver'] )

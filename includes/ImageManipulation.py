@@ -10,9 +10,8 @@ import Image
 import ImageOps
 import struct
 
-sys.path.append( os.path.join(os.path.dirname(__file__), '../', '') )
 from config import config
-import includes.DriverLog as DriverLog
+import DriverLog as DriverLog
 
 Log = DriverLog.DriverLog( config['log_dir'] + 'new_log', config['verbosity'] )
 

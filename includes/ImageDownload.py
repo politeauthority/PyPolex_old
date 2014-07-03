@@ -6,15 +6,13 @@
   downloads and stores image
 """
 
-import os
-import sys
 import urllib
 import hashlib
 import imghdr
-sys.path.append( os.path.join(os.path.dirname(__file__), '../', '') )
+
 from config import config
-import includes.DriverLog as DriverLog
-import includes.DriverMysql as DriverMysql
+import DriverLog as DriverLog
+import DriverMysql as DriverMysql
 
 Log   = DriverLog.DriverLog( config['log_dir'] + 'new_log', config['verbosity'] )
 Mysql = DriverMysql.DriverMysql( config['database'] )
@@ -99,4 +97,3 @@ class ImageDownload( object ):
     return False
 
 # End File: includes/ImageDownload.py
-

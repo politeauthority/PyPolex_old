@@ -6,6 +6,7 @@
 config = {
   'verbosity'     : True,
   'use_cache'     : True,
+  'app_dir'       : '/home/alix/Dropbox/Python-Fun/PyPolex/',
   'img_dir'       : '/home/alix/Dropbox/Python-Fun/PyPolex/images/',
   'log_dir'       : '/home/alix/Dropbox/Python-Fun/PyPolex/logs/',
   'whitelist'     : [ 'vailrealestate.com' ],
