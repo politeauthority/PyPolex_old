@@ -6,21 +6,15 @@
 config = {
   'verbosity'     : True,
   'use_cache'     : True,
-  'app_dir'       : '/home/alix/Dropbox/Python-Fun/PyPolex/',
-  'img_dir'       : '/home/alix/Dropbox/Python-Fun/PyPolex/images/',
-  'log_dir'       : '/home/alix/Dropbox/Python-Fun/PyPolex/logs/',
+  'app_dir'       : '/home/alix/Repos/PyPolex/',
+  'img_dir'       : '/home/alix/Repos/PyPolex/images/',
+  'log_dir'       : '/home/alix/Repos/PyPolex/logs/',
   'whitelist'     : [ 'vailrealestate.com' ],
   'blacklist'     : [ 'imgur.com', 'flickr.com' ],
-  'database'      : {
-    'host'   : 'localhost',
-    'user'   : 'user',
-    'pass'   : 'password',
-    'dbname' : 'PyPolex'
-  },
   'webserver'     : {
     'global': {
       'server.socket_port'          : 9000,
-      'server.socket_host'          : "192.168.1.x",
+      'server.socket_host'          : "192.168.7.70",
       'server.socket_file'          : "",
       'server.socket_queue_size'    : 5,
       'server.protocol_version'     : "HTTP/1.0",

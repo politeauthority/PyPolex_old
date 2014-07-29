@@ -12,10 +12,8 @@ import imghdr
 
 from config import config
 import DriverLog as DriverLog
-import DriverMysql as DriverMysql
 
 Log   = DriverLog.DriverLog( config['log_dir'] + 'new_log', config['verbosity'] )
-Mysql = DriverMysql.DriverMysql( config['database'] )
 
 class ImageDownload( object ):
 
